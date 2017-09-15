@@ -8,26 +8,49 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
-	
+	Sprite asteroid;
+	Sprite bullet;
+	Sprite ship;
+	int x=10;
+	int y=0;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		asteroid = new Sprite("asteroid.png");
+		bullet = new Sprite("bullet.png");
+		ship = new Sprite("rocket.png", 20,0,1f,5f);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		float deltaTime= Gdx.graphics.getDeltaTime();
+		update(deltaTime);
+		show();
 	}
-	
+
+	private void show() {
+		batch.begin();
+
+		ship.draw(batch);
+
+		batch.end();
+
+	}
+
+	public void update(float deltaTime) {
+			ship.update(deltaTime);
+			bullet.update(deltaTime);
+			asteroid.update(deltaTime);
+	}
+
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+        asteroid.dispose();
+        bullet.dispose();
+        ship.dispose();
+        batch.dispose();
 	}
 }
