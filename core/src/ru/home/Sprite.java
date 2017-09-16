@@ -3,7 +3,9 @@ package ru.home;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
 
 
 public class Sprite extends Texture {
@@ -12,6 +14,7 @@ public class Sprite extends Texture {
     protected Vector2 pos;
     protected Vector2 speed;
     protected TextureRegion regions;
+    Rectangle obj;
     protected float angle;
     protected float scale = 1f;
     float halfWidth;
@@ -33,6 +36,7 @@ public class Sprite extends Texture {
         this.regions = new TextureRegion(this);
         this.halfHeight = this.getHeight() / 2;
         this.halfWidth = this.getWidth() / 2;
+        this.obj = new Rectangle(x,y,this.getWidth(),this.getHeight());
 
     }
 
@@ -51,7 +55,8 @@ public class Sprite extends Texture {
 
 
 
-    public void update(float deltaTime){
+    public void update(float deltaTime, Rectangle screen){
+        checkAndHandleBounds(screen);
         pos.mulAdd(speed,deltaTime);
     }
 
@@ -64,6 +69,18 @@ public class Sprite extends Texture {
                 getWidth(), getHeight(),
                 scale, scale, angle
         );
+
+    }
+
+    protected void checkAndHandleBounds(Rectangle screen){
+        if(pos.x> screen.getX()+screen.getWidth())           pos.x=0;
+        if(pos.x + obj.getWidth() < screen.getX()) pos.x=screen.x;
+        if(screen.getY() > pos.y+obj.getHeight()) pos.y=screen.y;
+        if(pos.y > screen.getY()+screen.getHeight()) pos.y=0;
+    }
+
+    public boolean isOutside(Rectangle screen, Rectangle obj) {
+        return obj.getX()> screen.getX()+screen.getWidth() || obj.getX() + obj.getWidth() < screen.getX()  || screen.getY() > obj.getY()+obj.getHeight() || obj.getY() > screen.getY()+screen.getHeight();
 
     }
 
@@ -91,4 +108,5 @@ public class Sprite extends Texture {
     public void setHalfHeight(float halfHeight) {
         this.halfHeight = halfHeight;
     }
+
 }
